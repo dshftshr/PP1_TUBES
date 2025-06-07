@@ -1,6 +1,8 @@
 package entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class Reservasi {
     private Pelanggan pelanggan;
@@ -27,6 +29,9 @@ public class Reservasi {
 
     @Override
     public String toString() {
-        return "Reservasi oleh " + pelanggan + ", Meja: " + nomorMeja + ", Waktu: " + waktu;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return "Reservasi oleh " + pelanggan +
+               ", Meja: " + nomorMeja +
+               ", Waktu: " + waktu.format(formatter);
     }
 }
