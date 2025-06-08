@@ -1,9 +1,10 @@
 package services;
 
 import entity.Reservasi;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 public class ReservasiStack {
-
     private Reservasi[] array;
     private int capacity, TOP;
     public final int MIN = -1;
@@ -63,28 +64,47 @@ public class ReservasiStack {
     public void display() {
         System.out.println("\n=== DAFTAR RESERVASI ===");
         System.out.println("Jumlah reservasi: " + ukuran());
-        System.out.println("Kosong? " + isEmpty());
-        System.out.println("Penuh? " + isFull());
 
         if (isEmpty()) {
             System.out.println("Belum ada reservasi yang dicatat.");
             return;
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         System.out.println("\nReservasi dari yang terbaru:");
         int i = TOP;
         while (i >= 0) {
             Reservasi reservasi = array[i];
-            System.out.println((TOP - i + 1) + ". "
-                    + reservasi.getPelanggan().getNama()
-                    + " - Meja " + reservasi.getNomorMeja()
-                    + " - Waktu: " + reservasi.getWaktu());
+            System.out.println((TOP - i + 1) + ". " +
+                    reservasi.getPelanggan().getNama() +
+                    " - Meja " + reservasi.getNomorMeja() +
+                    " - Waktu: " + reservasi.getWaktu().format(formatter));
             i--;
         }
         System.out.println("==========================");
     }
 
+    public boolean isMejaSudahDipesan(int nomorMeja) {
+        for (int i = 0; i <= TOP; i++) {
+            if (array[i].getNomorMeja() == nomorMeja) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateReservasi(int index, Reservasi reservasiBaru) {
+        if (index < 0 || index > TOP) {
+            System.out.println("Index tidak valid.");
+            return;
+        }
+        array[index] = reservasiBaru;
+        System.out.println("Reservasi berhasil diperbarui.\n");
+    }
+
     public void tampilkanSemua() {
+        display();
+
         // TODO Auto-generated method stub
 
     }
