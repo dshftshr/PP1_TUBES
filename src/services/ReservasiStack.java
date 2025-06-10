@@ -1,13 +1,14 @@
 package services;
 
 import entity.Reservasi;
+import entity.Pelanggan;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 
 public class ReservasiStack {
     private Reservasi[] array;
     private int capacity, TOP;
     public final int MIN = -1;
+    private final int MAX_MEJA = 25; // [BARU] Batas maksimum nomor meja
 
     public ReservasiStack(int capacity) {
         array = new Reservasi[capacity];
@@ -23,12 +24,33 @@ public class ReservasiStack {
         return TOP >= capacity - 1;
     }
 
-    public void push(Reservasi reservasi) {
+    // public boolean push(Reservasi reservasi) { // [UBAH: void → boolean]
+    // if (isFull()) {
+    // System.out.println("Stack reservasi penuh! Tidak bisa menambah reservasi
+    // baru.");
+    // return false; // [BARU]
+    // } else {
+    // TOP++;
+    // array[TOP] = reservasi;
+    // return true; // [BARU]
+    // }
+    // }
+
+    // max meja
+    public boolean push(Reservasi reservasi) {
         if (isFull()) {
             System.out.println("Stack reservasi penuh! Tidak bisa menambah reservasi baru.");
+            return false;
+        } else if (reservasi.getNomorMeja() < 1 || reservasi.getNomorMeja() > MAX_MEJA) { // [BARU]
+            System.out.println("Nomor meja harus antara 1 sampai " + MAX_MEJA + ".");
+            return false;
+        } else if (isMejaSudahDipesan(reservasi.getNomorMeja())) { // [BARU]
+            System.out.println("Nomor meja tersebut sudah dipesan. Silakan pilih nomor meja lain.");
+            return false;
         } else {
             TOP++;
             array[TOP] = reservasi;
+            return true;
         }
     }
 
@@ -102,10 +124,28 @@ public class ReservasiStack {
         System.out.println("Reservasi berhasil diperbarui.\n");
     }
 
+    // [BARU] Cari reservasi berdasarkan nama / telepon / alamat
+    // public void cariReservasi(String keyword) {
+    // boolean ditemukan = false;
+    //
+    // for (int i = TOP; i >= 0; i--) {
+    // Reservasi r = array[i];
+    // Pelanggan p = r.getPelanggan();
+    // String gabungan = (p.getNama() + " " + p.getNoTelepon() + " ").toLowerCase();
+    // // p.getAlamat()
+    //
+    // if (gabungan.contains(keyword.toLowerCase())) {
+    // System.out.println("- " + r);
+    // ditemukan = true;
+    // }
+    // }
+    //
+    // if (!ditemukan) {
+    // System.out.println("Tidak ditemukan reservasi dengan kata kunci tersebut.");
+    // }
+    // }
+
     public void tampilkanSemua() {
         display();
-
-        // TODO Auto-generated method stub
-
     }
 }
